@@ -6,3 +6,4 @@ var resolvers = {
     }
 };
 exports.default = resolvers;
+//# sourceMappingURL=resolver.js.map

@@ -5,3 +5,4 @@ exports.default = {
     DB_POSTGR: 'url',
     port: 4000
 };
+//# sourceMappingURL=config.js.map

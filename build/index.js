@@ -7,13 +7,15 @@ var apollo_server_express_1 = require("apollo-server-express");
 var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
 var config_1 = __importDefault(require("./config"));
-var entities_1 = __importDefault(require("./entities"));
+var schemas_1 = __importDefault(require("./schemas"));
 var resolvers_1 = __importDefault(require("./resolvers"));
+var db_1 = __importDefault(require("./db"));
 var app = express_1.default();
+db_1.default();
 app.use(cors_1.default());
 app.use(express_1.default.json());
 var server = new apollo_server_express_1.ApolloServer({
-    typeDefs: entities_1.default,
+    typeDefs: schemas_1.default,
     resolvers: resolvers_1.default
 });
 server.applyMiddleware({ app: app, path: '/graphql' });
@@ -24,3 +26,4 @@ app.listen(PORT, function () {
     });
     console.log("Graphql endpoint at http://localhost:" + PORT + "/graphql");
 });
+//# sourceMappingURL=index.js.map

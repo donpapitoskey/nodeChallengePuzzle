@@ -1,9 +1,7 @@
 import { gql } from 'apollo-server-express'
-
 const schema = gql`
-  type Query {
+  extend type Query {
     greetings: String
   }
 `
-
 export default schema

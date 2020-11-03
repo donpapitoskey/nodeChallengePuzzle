@@ -24,11 +24,9 @@ const userSchema = gql`
     password: String!
   }
 
-  type Mutation {
+  extend type Mutation {
     signUp(input: UserInput): User
     login(input: LoginInput): Token
   }
-
 `
-
 export default userSchema

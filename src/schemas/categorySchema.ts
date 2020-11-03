@@ -11,12 +11,12 @@ const schema = gql`
     name: String
   }
 
-  type Query {
+  extend type Query {
     getCategories(filtering: CategoryInput, token: String!): [Category]!
     getOneCategory(id: ID!, token:String!): Category
   }
 
-  type Mutation {
+  extend type Mutation {
     createCategory(input: CategoryInput, token: String!): Category
     updateCategory(id: ID!, input: CategoryInput!, token: String!): Category
     deleteCategory(id: ID!, token: String!): String

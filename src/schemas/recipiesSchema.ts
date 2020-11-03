@@ -38,5 +38,4 @@ const schema = gql`
   }
 
 `
-
 export default schema
