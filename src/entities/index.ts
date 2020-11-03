@@ -1,3 +1,3 @@
-import schema from "./schema";
+import schema from './entity'
 
-export default schema;
+export default schema

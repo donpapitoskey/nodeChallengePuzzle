@@ -1,28 +1,33 @@
-import {ApolloServer} from 'apollo-server-express';
-import express from 'express';
-import cors from 'cors';
-import config from './config';
-import typeDefs from './entities';
-import resolvers from './resolvers';
+import { ApolloServer } from 'apollo-server-express'
+import express from 'express'
+import cors from 'cors'
+import config from './config'
+import typeDefs from './entities'
+import resolvers from './resolvers'
+import { buildFederatedSchema } from '@apollo/federation'
 
-const app = express();
+const app = express()
 
-app.use(cors());
+app.use(cors())
 
-app.use(express.json());
+app.use(express.json())
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers
-});
+  schema: buildFederatedSchema([
+    {
+      typeDefs,
+      resolvers
+    }
+  ])
+})
 
-server.applyMiddleware({app,path:'/graphql'});
+server.applyMiddleware({ app, path: '/graphql' })
 
-const PORT = config.port || 3000;
+const PORT = config.port || 3000
 
-app.listen(PORT,() => {
-  app.use('/',(_,res) => {
-    res.send({message: 'Hello buddy'});
-  });
+app.listen(PORT, () => {
+  app.use('/', (_, res) => {
+    res.send({ message: 'Hello buddy' })
+  })
   console.log(`Graphql endpoint at http://localhost:${PORT}/graphql`)
-});
+})
