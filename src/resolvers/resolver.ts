@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import config from '../config';
 import {Category, Recipe, User}  from '../entity';
 import {getConnection, getRepository} from 'typeorm';
+import { exit } from 'process';
 
 interface Token {
   user: User;
@@ -11,8 +12,9 @@ interface Token {
 };
 
 const createToken = ({user, secret, expiresIn}:Token):string => {
-  console.log(`This is the infor of the token \n ${user}`);
-  return 'Return token';
+  const {id,email,name,password} = user;
+  const token = jwt.sign({id,email,name,password},secret,{expiresIn});
+  return token;
 };
 
 
@@ -42,6 +44,26 @@ const resolvers = {
       } catch (error) {
         console.log(error);
       }
+    },
+    login: async (_:any,{input}:{input:User}) => {
+
+      const {email, password} = input;
+      const UserRepository = getRepository(User);
+      const userExists:User | undefined = await UserRepository.findOne({email});
+      if (!userExists) {
+        throw new Error('This user already exists');
+      }
+      const passwortCheck = await bcryptjs.compare(password,userExists.password);
+      if (!passwortCheck) {
+        throw new Error('The password is incorrect');
+      }
+
+      const token = createToken({
+        user: userExists,
+        secret: config.jwtSecret,
+        expiresIn: '12h'
+      });
+      return {token};
     }
   }
 }

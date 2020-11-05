@@ -74,8 +74,5 @@
         "suppressWhileTypeErrorsPresent": false
       }
     ]
-  },
-  "include": [
-    "./src/**/*"
-  ]
+  }
 }
