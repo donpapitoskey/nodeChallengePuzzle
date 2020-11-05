@@ -17,7 +17,7 @@ const typeDefs = gql`
 export default [
   typeDefs,
   schema,
-  categoryEntity,
-  userEntity,
-  recipyEntity
+  //categoryEntity,
+  //userEntity,
+  //recipyEntity
 ]
