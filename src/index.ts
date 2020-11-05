@@ -5,26 +5,33 @@ import config from './config';
 import typeDefs from './schemas';
 import resolvers from './resolvers';
 import connectDB from './db';
+import { createConnection } from 'typeorm';
 
 
-connectDB();
+const startServer = async ()=> {
+  
+  connectDB();
 
-const app = express();
+  await createConnection();
 
-app.use(cors());
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers
+  });
 
-app.use(express.json());
+  const app = express();
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers
-});
+  app.use(cors());
 
-server.applyMiddleware({app,path:'/graphql'});
+  app.use(express.json());
 
-const PORT = config.port || 3000;
+  server.applyMiddleware({app,path:'/graphql'});
 
-app.listen(PORT, () => {
-  console.log(`GraphQL endpoint at url: http://localhost:${PORT}${server.graphqlPath}`);
-})
+  const PORT = config.port || 3000;
 
+  app.listen(PORT, () => {
+    console.log(`GraphQL endpoint at url: http://localhost:${PORT}${server.graphqlPath}`);
+  })
+};
+
+startServer();

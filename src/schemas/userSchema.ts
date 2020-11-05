@@ -2,7 +2,7 @@ import { gql } from 'apollo-server-express'
 
 const userSchema = gql`
   
-  type User @key(fields: "id") {
+  type User {
     id: ID
     name: String
     email: String
@@ -26,7 +26,7 @@ const userSchema = gql`
 
   extend type Mutation {
     signUp(input: UserInput): User
-    login(input: LoginInput): Token
+    # login(input: LoginInput): Token
   }
 `
 export default userSchema

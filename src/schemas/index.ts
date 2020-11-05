@@ -1,8 +1,8 @@
 import { gql } from 'apollo-server'
 import schema from './entity'
-import categoryEntity from './categorySchema'
-import userEntity from './userSchema'
-import recipyEntity from './recipiesSchema'
+import categorySchema from './categorySchema'
+import userSchema from './userSchema'
+import recipeSchema from './recipiesSchema'
 
 const typeDefs = gql`
   type Query {
@@ -17,7 +17,7 @@ const typeDefs = gql`
 export default [
   typeDefs,
   schema,
-  //categoryEntity,
-  //userEntity,
-  //recipyEntity
+  //categorySchema,
+  userSchema,
+  //recipySchema
 ]

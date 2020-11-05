@@ -4,17 +4,8 @@ import entities from '../entity';
 
 const connectDB = async () => {
   try {
-    await createConnection({
-      type: "postgres",
-      host: "localhost",
-      port: 5432,
-      username: "postgres",
-      password: "admin",
-      database: "postgres",
-      entities,
-      synchronize: true,
-      logging: false
-    });
+    console.log("awaiting DB connection");
+    const connection = await createConnection();
     console.log('database Connected');
   } catch (error) {
     console.log('There was an error');
