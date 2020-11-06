@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-express'
 const schemas = gql`
   
-  # User Schema
+  # User Types
   
   type User {
     id: ID
@@ -26,41 +26,19 @@ const schemas = gql`
   }
 
   
-  # Category Schemas
+  # Category Types
 
   type Category {
     id: ID 
     name: String!
+    recipes: [Recipe]
   }
 
   input CategoryInput { 
     name: String
   }
 
-  type Query {
-    greetings: String
-    getCategories: [Category]!
-  }
-
-  type Mutation {
-    signUp(input: UserInput): User
-    login(input: LoginInput): Token
-    createCategory(input: CategoryInput!): Category
-    # updateCategory(id: ID!, input: CategoryInput!): Category
-  }
-
-  # extend type Query {
-    
-    # getOneCategory(id: ID!): Category
-  # }
-
-  # extend type Mutation {
-    
-    # 
-    # deleteCategory(id: ID!, token: String!): String
-  # }
-
-  # Recipe Schema
+  # Recipe Types
 
   type Recipe  {
     id: ID! 
@@ -83,18 +61,27 @@ const schemas = gql`
     category: String
   }
 
-  # extend type Query {
+  type Query {
+    greetings: String
+    getCategories: [Category]!
+    getOneCategory(id: ID!): Category
     # getRecipes(filtering: RecipeInputFiltering, token: String!): [Recipe]!
     # getOneRecipe(id: ID!, token:String!): Recipe
     # getFavs: [Recipe]
-  # }
-  
-  # extend type Mutation {
+  }
+
+  type Mutation {
+    signUp(input: UserInput): User
+    login(input: LoginInput): Token
+    createCategory(input: CategoryInput!): Category
+    updateCategory(id: ID!, input: CategoryInput!): Category
+    # deleteCategory(id: ID!, token: String!): String
     # createRecipe(input: RecipeInput, token: String!): Recipe
     # updateRecipe(id: ID!, input: RecipeInput!, token: String!): Recipe
     # deleteRecipe(id: ID!, token: String!): String
     # addToFavs(id: ID!, token: String!): Recipe
     # removeFromFavs(id: ID!, token: String!): String
-  # }
+  }
+  
 `
 export default schemas;

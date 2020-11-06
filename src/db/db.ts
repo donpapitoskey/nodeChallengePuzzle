@@ -7,6 +7,7 @@ const connectDB = async () => {
     console.log("awaiting DB connection");
     const connection = await createConnection();
     console.log('database Connected');
+    return connection;
   } catch (error) {
     console.log('There was an error');
     console.log(error);

@@ -24,11 +24,34 @@ const resolvers = {
     greetings: () => ('Hello'),
     getCategories: async (_:any,__:any, ctx:{user:User}) => {
       
+      const {user} = ctx;
+
       const CategoryRepository = getRepository(Category);
-      if (ctx.user === undefined) {
+      if (user === undefined) {
         throw new Error('Error with authentication. Please login again');
       }
+      const UserRepository = getRepository(User);
+      try {
+        await UserRepository.findOne({id: user.id});
+      } catch (error) {
+        throw new Error('The user does not exist');
+      }      
       const result = await CategoryRepository.find();
+      return result;
+    },
+    getOneCategory: async (_:any,{id}:{id:string}, ctx:{user:User}) => {
+      const {user} = ctx;
+      const CategoryRepository = getRepository(Category);
+      if (user === undefined) {
+        throw new Error('Error with authentication. Please login again');
+      }
+      const UserRepository = getRepository(User);
+      try {
+        await UserRepository.findOne({id: user.id});
+      } catch (error) {
+        throw new Error('The user does not exist');
+      }      
+      const result = await CategoryRepository.findOne(id);
       return result;
     }
   },
@@ -70,17 +93,19 @@ const resolvers = {
         expiresIn: '12h'
       });
       return {token};
-    }, createCategory: async (_:any,{input}:{input:Category}, ctx:{user:User}) => {
+    }, 
+    createCategory: async (_:any,{input}:{input:Category}, ctx:{user:User}) => {
       const {name} = input;
       const CategoryRepository = getRepository(Category);
       if (ctx.user === undefined) {
         throw new Error('Error with authentication. Please login again');
       }
-      const UserRepository = getRepository(User);
 
-      const userExists = await UserRepository.findOne({id: ctx.user.id});
-      if (userExists === undefined) {
-        throw new Error('User not registered. Please sign up.');
+      const UserRepository = getRepository(User);
+      try {
+        await UserRepository.findOne({id: ctx.user.id});
+      } catch (error) {
+        throw new Error('The user does not exist');
       }
 
       const categoryExists = await CategoryRepository.findOne({name});
@@ -89,6 +114,21 @@ const resolvers = {
       } 
       const result = await CategoryRepository.save(input);
       return result;
+    },
+    updateCategory: async (_:any,{id,input}:{id:string, input:Category}, ctx:{user:User}) => {
+      
+      
+
+      if (ctx.user === undefined) {
+        throw new Error('Error with authentication. Please login again');
+      }
+
+      const UserRepository = getRepository(User);
+      try {
+        await UserRepository.findOne({id: ctx.user.id});
+      } catch (error) {
+        throw new Error('The user does not exist');
+      }
     }
   }
 }

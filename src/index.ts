@@ -5,15 +5,12 @@ import jwt from 'jsonwebtoken';
 import config from './config';
 import typeDefs from './schemas';
 import resolvers from './resolvers';
+import {User, Category, Recipe} from './entity';
 import connectDB from './db';
-import { createConnection } from 'typeorm';
-
 
 const startServer = async () => {
 
-  connectDB();
-
-  await createConnection();
+  const connection = await connectDB();
 
   const server = new ApolloServer({
     typeDefs,
