@@ -1,6 +1,7 @@
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import cors from 'cors';
+import jwt from 'jsonwebtoken';
 import config from './config';
 import typeDefs from './schemas';
 import resolvers from './resolvers';
@@ -8,15 +9,27 @@ import connectDB from './db';
 import { createConnection } from 'typeorm';
 
 
-const startServer = async ()=> {
-  
+const startServer = async () => {
+
   connectDB();
 
   await createConnection();
 
   const server = new ApolloServer({
     typeDefs,
-    resolvers
+    resolvers,
+    context: ({ req }) => {
+      const token = req.headers['authorization'] || '';
+      if (token) {
+        try {
+          const user = jwt.verify(token, config.jwtSecret);
+          return {user};
+        } catch (error) {
+          console.log('There was an error');
+          console.log(error);
+        }
+      }
+    }
   });
 
   const app = express();
@@ -25,7 +38,7 @@ const startServer = async ()=> {
 
   app.use(express.json());
 
-  server.applyMiddleware({app,path:'/graphql'});
+  server.applyMiddleware({ app, path: '/graphql' });
 
   const PORT = config.port || 3000;
 

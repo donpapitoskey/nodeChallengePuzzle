@@ -2,8 +2,7 @@ import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from '../config';
 import {Category, Recipe, User}  from '../entity';
-import {getConnection, getRepository} from 'typeorm';
-import { exit } from 'process';
+import {getRepository} from 'typeorm';
 
 interface Token {
   user: User;
@@ -37,10 +36,8 @@ const resolvers = {
       input.password = await bcryptjs.hash(password,salt);
 
       try {
-        let user = new User();
-        user = input;
-        UserRepository.save(user);
-        return user;
+        UserRepository.save(input);
+        return input;
       } catch (error) {
         console.log(error);
       }
@@ -64,7 +61,29 @@ const resolvers = {
         expiresIn: '12h'
       });
       return {token};
+    }, createCategory: async (_:any,{input}:{input:Category}, ctx:{user:User}) => {
+      const {name} = input;
+      const UserRepository = getRepository(User);
+      const CategoryRepository = getRepository(Category);
+      try {
+        const userExists = await UserRepository.find({id:ctx.user.id});
+        
+        if (!userExists) {
+          throw new Error('The authentication key is corrupted');
+        }
+        const categoryExists = CategoryRepository.find({name});
+        if (categoryExists) {
+          throw new Error('This category exists already');
+        } 
+        const result = await CategoryRepository.save(input);
+        return result;
+      } catch (error) {
+        throw new Error(error);
+      }
+      
+
     }
+    
   }
 }
 
