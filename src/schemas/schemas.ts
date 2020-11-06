@@ -1,8 +1,5 @@
 import { gql } from 'apollo-server-express'
 const schemas = gql`
-  type Query {
-    greetings: String
-  }
   
   # User Schema
   
@@ -28,12 +25,7 @@ const schemas = gql`
     password: String!
   }
 
-  type Mutation {
-    signUp(input: UserInput): User
-    login(input: LoginInput): Token
-    createCategory(input: CategoryInput!): Category
-  }
-
+  
   # Category Schemas
 
   type Category {
@@ -45,14 +37,26 @@ const schemas = gql`
     name: String
   }
 
+  type Query {
+    greetings: String
+    getCategories: [Category]!
+  }
+
+  type Mutation {
+    signUp(input: UserInput): User
+    login(input: LoginInput): Token
+    createCategory(input: CategoryInput!): Category
+    # updateCategory(id: ID!, input: CategoryInput!): Category
+  }
+
   # extend type Query {
-    # getCategories(filtering: CategoryInput): [Category]!
-    # getOneCategory(id: ID!, token:String!): Category
+    
+    # getOneCategory(id: ID!): Category
   # }
 
   # extend type Mutation {
     
-    # updateCategory(id: ID!, input: CategoryInput!, token: String!): Category
+    # 
     # deleteCategory(id: ID!, token: String!): String
   # }
 

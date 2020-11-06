@@ -26,7 +26,6 @@ const startServer = async () => {
           return {user};
         } catch (error) {
           console.log('There was an error');
-          console.log(error);
         }
       }
     }

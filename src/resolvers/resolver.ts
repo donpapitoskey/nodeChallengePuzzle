@@ -21,7 +21,16 @@ const createToken = ({user, secret, expiresIn}:Token):string => {
 
 const resolvers = {
   Query: {
-    greetings: () => ('Hello')
+    greetings: () => ('Hello'),
+    getCategories: async (_:any,__:any, ctx:{user:User}) => {
+      
+      const CategoryRepository = getRepository(Category);
+      if (ctx.user === undefined) {
+        throw new Error('Error with authentication. Please login again');
+      }
+      const result = await CategoryRepository.find();
+      return result;
+    }
   },
   Mutation: {
     signUp: async (_:any,{input}:{input:User}) => {
@@ -63,27 +72,24 @@ const resolvers = {
       return {token};
     }, createCategory: async (_:any,{input}:{input:Category}, ctx:{user:User}) => {
       const {name} = input;
-      const UserRepository = getRepository(User);
       const CategoryRepository = getRepository(Category);
-      try {
-        const userExists = await UserRepository.find({id:ctx.user.id});
-        
-        if (!userExists) {
-          throw new Error('The authentication key is corrupted');
-        }
-        const categoryExists = CategoryRepository.find({name});
-        if (categoryExists) {
-          throw new Error('This category exists already');
-        } 
-        const result = await CategoryRepository.save(input);
-        return result;
-      } catch (error) {
-        throw new Error(error);
+      if (ctx.user === undefined) {
+        throw new Error('Error with authentication. Please login again');
       }
-      
+      const UserRepository = getRepository(User);
 
+      const userExists = await UserRepository.findOne({id: ctx.user.id});
+      if (userExists === undefined) {
+        throw new Error('User not registered. Please sign up.');
+      }
+
+      const categoryExists = await CategoryRepository.findOne({name});
+      if (categoryExists) {
+        throw new Error('This category exists already');
+      } 
+      const result = await CategoryRepository.save(input);
+      return result;
     }
-    
   }
 }
 
