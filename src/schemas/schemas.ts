@@ -42,31 +42,51 @@ const schemas = gql`
 
   type Recipe  {
     id: ID! 
-    name: String!
-    description: String!
-    ingredients: [String!]!
+    name: String
+    description: String
+    ingredients: [Ingredient!]
     category: Category
   }
 
-  input RecipeInput {
+  type Ingredient {
     name: String
-    ingredient: [String]
-    description: String
-    category: String
+    qty: Float
+    unit: Unit
+  }
+
+  enum Unit {
+    g
+    ml
+    teaspoon
+    tablespoon
+    unit
+  }
+
+  input IngredientInput {
+    name: String!
+    qty: Float!
+    unit: Unit!
+  }
+
+  input RecipeInput {
+    name: String!
+    ingredients: [IngredientInput!]
+    description: String!
+    category: CategoryInput!
   }
 
   input RecipeInputFiltering {
     name: String
     ingredient: [String]
-    category: String
+    category: CategoryInput
   }
 
   type Query {
     greetings: String
     getCategories: [Category]!
     getOneCategory(id: ID!): Category
-    # getRecipes(filtering: RecipeInputFiltering, token: String!): [Recipe]!
-    # getOneRecipe(id: ID!, token:String!): Recipe
+    getRecipes(filtering: RecipeInputFiltering): [Recipe]
+    getOneRecipe(id: ID!): Recipe
     # getFavs: [Recipe]
   }
 
@@ -75,8 +95,8 @@ const schemas = gql`
     login(input: LoginInput): Token
     createCategory(input: CategoryInput!): Category
     updateCategory(id: ID!, input: CategoryInput!): Category
-    # deleteCategory(id: ID!, token: String!): String
-    # createRecipe(input: RecipeInput, token: String!): Recipe
+    deleteCategory(id: ID!): String
+    createRecipe(input: RecipeInput!): Recipe
     # updateRecipe(id: ID!, input: RecipeInput!, token: String!): Recipe
     # deleteRecipe(id: ID!, token: String!): String
     # addToFavs(id: ID!, token: String!): Recipe

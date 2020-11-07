@@ -1,12 +1,5 @@
 import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
 
-export interface UserInt {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-};
-
 @Entity()
 export default class User {
 
@@ -22,6 +15,4 @@ export default class User {
     @Column()
     password: string;
 
-}
-
-export type UserType = typeof User;
+};

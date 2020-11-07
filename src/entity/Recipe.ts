@@ -6,12 +6,13 @@ import {
 } from "typeorm";
 import Category from './Category';
 
-export interface UserInt {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-};
+enum Unit {
+  g="g",
+  ml="ml",
+  teaspoon="teaspoon",
+  tablespoon="tablespoon",
+  unit="unit"
+}
 
 @Entity()
 export default class Recipe {
@@ -19,18 +20,15 @@ export default class Recipe {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({unique: true})
     name: string;
 
     @Column()
     description: string;
 
-    @Column({array: true})
-    ingredients: string;
+    @Column({type:'simple-json'})
+    ingredients: {name: string, qty: number, unit: Unit};
 
     @ManyToOne(type => Category, category => category.recipes)
     category: Category;
-
 };
-
-export type RecipeType = typeof Recipe;
