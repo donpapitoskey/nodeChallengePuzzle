@@ -1,21 +1,20 @@
-import { ApolloServer } from 'apollo-server-express';
+import 'reflect-metadata';
+import {ApolloServer} from 'apollo-server-express';
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import config from './config';
 import typeDefs from './schemas';
 import resolvers from './resolvers';
-import {User, Category, Recipe} from './entity';
 import connectDB from './db';
 
 const startServer = async () => {
-
-  const connection = await connectDB();
+  await connectDB();
 
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: ({ req }) => {
+    context: ({req}) => {
       const token = req.headers['authorization'] || '';
       if (token) {
         try {
@@ -34,13 +33,13 @@ const startServer = async () => {
 
   app.use(express.json());
 
-  server.applyMiddleware({ app, path: '/graphql' });
+  server.applyMiddleware({app, path: '/graphql'});
 
   const PORT = config.port || 3000;
 
   app.listen(PORT, () => {
     console.log(`GraphQL endpoint at url: http://localhost:${PORT}${server.graphqlPath}`);
-  })
+  });
 };
 
 startServer();

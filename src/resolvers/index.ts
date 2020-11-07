@@ -5,5 +5,5 @@ import recipeResolver from './recipeRespolver';
 export default [
   userResolver,
   categoryResolver,
-  recipeResolver
+  recipeResolver,
 ];

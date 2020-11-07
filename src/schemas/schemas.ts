@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express'
+import {gql} from 'apollo-server-express';
 const schemas = gql`
   
   # User Types
@@ -77,8 +77,8 @@ const schemas = gql`
 
   input RecipeInputFiltering {
     name: String
-    ingredient: [String]
-    category: CategoryInput
+    ingredient: String
+    category: String
   }
 
   type Query {
@@ -103,5 +103,5 @@ const schemas = gql`
     # removeFromFavs(id: ID!, token: String!): String
   }
   
-`
+`;
 export default schemas;
