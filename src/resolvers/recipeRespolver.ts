@@ -185,11 +185,46 @@ export default {
       const result = await RecipeRepository.save(storeData);
       return result;
     },
-    updateRecipe: async () => {
-
+    updateRecipe: async (_:any,
+      {id, input}:{id:number, input:RecipeInput},
+      ctx:{user:User},
+    ) => {
+      const {user} = ctx;
+      const {category, description, ingredients, name} = input;
+      if (user === undefined) {
+        throw new Error('Error with authentication. Please login again');
+      }
+      const UserRepository = getRepository(User);
+      const userExists = await UserRepository.findOne({id: user.id});
+      if (!userExists) {
+        throw new Error('The user does not exist');
+      }
+      const CategoryRepository = getRepository(Category);
+      const categoryExists = await CategoryRepository
+          .findOne({name: category});
+      if (categoryExists === undefined) {
+        throw new Error('Invalid Category');
+      }
+      const RecipeRepository = getRepository(Recipe);
+      const recipeToUpdate = await RecipeRepository.findOne({id});
+      if (recipeToUpdate === undefined) {
+        throw new Error('The Recipe no longer exists');
+      }
+      if (name !== undefined) {
+        recipeToUpdate.name = name;
+      }
+      if (ingredients !== undefined) {
+        recipeToUpdate.ingredients = ingredients
+      } 
+      if (description === undefined) {
+        recipeToUpdate.description= description;
+      }
+      recipeToUpdate.category = categoryExists;
+      const results = await RecipeRepository.save(recipeToUpdate);
+      return results;
     },
     deleteRecipe: async () => {
-
+      
     },
     addToMyRecipes: async (_:any, {id}:{id:number}, ctx:{user: User}) => {
       const {user} = ctx;
