@@ -11,7 +11,7 @@ interface RecipeFilterInput {
 interface RecipeInput {
   name: string;
   description: string;
-  ingredients: string[];
+  ingredients: string;
   category: string;
 }
 
@@ -28,9 +28,7 @@ export default {
         {filtering}:{filtering:RecipeFilterInput},
         ctx:{user:User},
     ):Promise<Recipe[]> => {
-      const {name, ingredients, category} = filtering;
       const {user} = ctx;
-      const RecipeRepository = getRepository(Recipe);
       if (user === undefined) {
         throw new Error('Error with authentication. Please login again');
       }
@@ -40,32 +38,95 @@ export default {
       } catch (error) {
         throw new Error('The user does not exist');
       }
+      const RecipeRepository = getRepository(Recipe);
+      if (filtering === undefined ) {
+        const results = await RecipeRepository.find({relations: ['category']});
+        return results;
+      }
+      const {name, ingredients, category} = filtering;
+
+      if (category === undefined) {
+        if (ingredients === undefined) {
+          if (name === undefined) {
+            const results = new Recipe();
+            return [results];
+          }
+          const results = await RecipeRepository
+              .createQueryBuilder('recipe')
+              .leftJoinAndSelect('recipe.category', 'category')
+              .where('recipe.name ~~* :name', {name: `%${name}%`})
+              .getMany();
+          return results;
+        }
+        const searchIngredients = ingredientsSearchCriteria(ingredients);
+        if (name === undefined) {
+          const results = await RecipeRepository
+              .createQueryBuilder('recipe')
+              .leftJoinAndSelect('recipe.category', 'category')
+              .where('recipe.ingredients @> :ingredient',
+                  {ingredient: searchIngredients},
+              ).orWhere('recipe.ingredients @> :ingredient',
+                  {ingredient: searchIngredients},
+              )
+              .getMany();
+          return results;
+        }
+        const results = await RecipeRepository
+            .createQueryBuilder('recipe')
+            .leftJoinAndSelect('recipe.category', 'category')
+            .where('recipe.name ~~* :name', {name: `%${name}%`})
+            .andWhere('recipe.ingredients @> :ingredient',
+                {ingredient: searchIngredients},
+            ).orWhere('recipe.ingredients @> :ingredient',
+                {ingredient: searchIngredients},
+            )
+            .getMany();
+        return results;
+      }
       const CategoryRepository = getRepository(Category);
       const categoryExists = await CategoryRepository.findOne({name: category});
       if (!categoryExists) {
         throw new Error('This category does not exists');
       }
       const searchCategory = categoryExists.id;
+      if (ingredients === undefined) {
+        if (name === undefined) {
+          const results = await RecipeRepository
+              .createQueryBuilder('recipe')
+              .leftJoinAndSelect('recipe.category', 'category')
+              .where('recipe.category = :category', {category: searchCategory})
+              .getMany();
+          return results;
+        }
+        const results = await RecipeRepository
+            .createQueryBuilder('recipe')
+            .leftJoinAndSelect('recipe.category', 'category')
+            .where('recipe.name ~~* :name', {name: `%${name}%`})
+            .andWhere('recipe.category = :category', {category: searchCategory})
+            .getMany();
+
+        return results;
+      }
       const searchIngredients = ingredientsSearchCriteria(ingredients);
+      if (name === undefined) {
+        const results = await RecipeRepository
+            .createQueryBuilder('recipe')
+            .leftJoinAndSelect('recipe.category', 'category')
+            .where('recipe.category = :category', {category: searchCategory})
+            .andWhere('recipe.ingredients @> :ingredient',
+                {ingredient: searchIngredients},
+            ).getMany();
+        return results;
+      }
       const results = await RecipeRepository
           .createQueryBuilder('recipe')
           .leftJoinAndSelect('recipe.category', 'category')
-          // .from(Recipe, 'recipe')
           .where('recipe.name ~~* :name', {name: `%${name}%`})
           .andWhere('recipe.category = :category', {category: searchCategory})
           .andWhere('recipe.ingredients @> :ingredient',
               {ingredient: searchIngredients},
           )
-          /* .where('recipe.name ~~* :name AND recipe.categoryId = :category',
-              {name: '%tomato%', category: 1})*/
-          /* .where('recipe.ingredients = :category', {category: 1})
-          .loadAllRelationIds()*/
-          /* .where('recipe.ingredients @> :ingredient',
-              {ingredient: '{"Tomato"}'})*/
           .getMany();
-      // find({relations: ['category'], where: {name: Like('%soup%')}});
-      // console.log(results);
-      // results = results.map((element) => element.category = categoryExists);
       return results;
     },
     getOneRecipe: async (_:any, {id}:{id:string}, ctx:{user:User}) => {
@@ -85,9 +146,12 @@ export default {
     },
   },
   Mutation: {
-    createRecipe: async (_:any, {input}:{input:Recipe}, ctx:{user:User}) => {
+    createRecipe: async (_:any,
+        {input}:{input:RecipeInput},
+        ctx:{user:User},
+    ) => {
       const {user} = ctx;
-      const {name, category} = input;
+      const {name, category, description, ingredients} = input;
       const RecipeRepository = getRepository(Recipe);
       const CategoryRepository = getRepository(Category);
       if (user === undefined) {
@@ -105,14 +169,17 @@ export default {
         throw new Error('This Recipe exists already');
       }
       const categoryExists = await CategoryRepository
-          .findOne({name: category.name});
+          .findOne({name: category});
 
       if (!categoryExists) {
         throw new Error('Invalid Category');
       }
-      input.category = categoryExists;
-      console.log(input);
-      const result = await RecipeRepository.save(input);
+      const storeData = new Recipe();
+      storeData.name = name,
+      storeData.description = description;
+      storeData.ingredients = ingredients;
+      storeData.category = categoryExists;
+      const result = await RecipeRepository.save(storeData);
       return result;
     },
   },
