@@ -1,1 +1,1 @@
-export {default as schema} from './schemas';
+export {default} from './schemas';

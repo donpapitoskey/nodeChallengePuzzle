@@ -2,7 +2,7 @@
 /* eslint-disable new-cap */
 import {Entity,
   PrimaryGeneratedColumn,
-  Column, OneToMany,
+  Column, OneToMany, JoinTable,
 } from 'typeorm';
 import Recipe from './Recipe';
 
@@ -15,5 +15,6 @@ export default class Category {
   name: string;
 
   @OneToMany((type) => Recipe, (recipe) => recipe.category)
+  @JoinTable()
   recipes: Recipe[];
 };

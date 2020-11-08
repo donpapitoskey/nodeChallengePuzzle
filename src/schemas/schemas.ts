@@ -36,7 +36,7 @@ const schemas = gql`
 
   input CategoryInput { 
     name: String
-  }
+  } 
 
   # Recipe Types
 
@@ -44,40 +44,20 @@ const schemas = gql`
     id: ID! 
     name: String
     description: String
-    ingredients: [Ingredient!]
+    ingredients: [String!]
     category: Category
-  }
-
-  type Ingredient {
-    name: String
-    qty: Float
-    unit: Unit
-  }
-
-  enum Unit {
-    g
-    ml
-    teaspoon
-    tablespoon
-    unit
-  }
-
-  input IngredientInput {
-    name: String!
-    qty: Float!
-    unit: Unit!
   }
 
   input RecipeInput {
     name: String!
-    ingredients: [IngredientInput!]
+    ingredients: [String!]
     description: String!
-    category: CategoryInput!
+    category: String!
   }
 
   input RecipeInputFiltering {
     name: String
-    ingredient: String
+    ingredients: [String]
     category: String
   }
 

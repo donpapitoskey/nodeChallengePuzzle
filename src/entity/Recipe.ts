@@ -6,16 +6,9 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  JoinTable,
 } from 'typeorm';
 import Category from './Category';
-
-enum Unit {
-  g='g',
-  ml='ml',
-  teaspoon='teaspoon',
-  tablespoon='tablespoon',
-  unit='unit'
-}
 
 @Entity()
 export default class Recipe {
@@ -28,9 +21,10 @@ export default class Recipe {
     @Column()
     description: string;
 
-    @Column({type: 'simple-json'})
-    ingredients: {name: string, qty: number, unit: Unit};
+    @Column({array: true})
+    ingredients: string;
 
     @ManyToOne((type) => Category, (category) => category.recipes)
+    @JoinTable()
     category: Category;
 };
