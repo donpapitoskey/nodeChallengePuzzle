@@ -58,7 +58,7 @@ export default {
       return result;
     },
     updateCategory: async (_:any,
-        {id, input}:{id:string, input:Category},
+        {id, input}:{id:number, input:Category},
         ctx:{user:User},
     ) => {
       const {user} = ctx;
@@ -71,6 +71,14 @@ export default {
       } catch (error) {
         throw new Error('The user does not exist');
       }
+      const CategoryRepository = getRepository(Category);
+      const categoryToUpdate = await CategoryRepository.findOne({id});
+      if (categoryToUpdate === undefined) {
+        throw new Error('That category no longer exists');
+      }
+      categoryToUpdate.name = input.name;
+      const result = await CategoryRepository.save(categoryToUpdate);
+      return result;
     },
     deleteCategory: async (_:any, {id}:{id:string}, ctx:{user:User}) => {
       const {user} = ctx;

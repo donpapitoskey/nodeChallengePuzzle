@@ -67,7 +67,7 @@ const schemas = gql`
     getOneCategory(id: ID!): Category
     getRecipes(filtering: RecipeInputFiltering): [Recipe]
     getOneRecipe(id: ID!): Recipe
-    # getFavs: [Recipe]
+    getMyRecipes: [Recipe]
   }
 
   type Mutation {
@@ -77,10 +77,10 @@ const schemas = gql`
     updateCategory(id: ID!, input: CategoryInput!): Category
     deleteCategory(id: ID!): String
     createRecipe(input: RecipeInput!): Recipe
-    # updateRecipe(id: ID!, input: RecipeInput!, token: String!): Recipe
-    # deleteRecipe(id: ID!, token: String!): String
-    # addToFavs(id: ID!, token: String!): Recipe
-    # removeFromFavs(id: ID!, token: String!): String
+    updateRecipe(id: ID!, input: RecipeInput!): Recipe
+    deleteRecipe(id: ID!): String
+    addToMyRecipes(id: ID!): Recipe
+    removeFromMyRecipes(id: ID!): String
   }
   
 `;

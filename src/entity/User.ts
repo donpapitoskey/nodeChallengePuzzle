@@ -1,6 +1,12 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable new-cap */
-import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
+import {Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  JoinTable,
+  ManyToMany
+} from 'typeorm';
+import {Recipe} from '.';
 
 @Entity()
 export default class User {
@@ -15,4 +21,8 @@ export default class User {
 
   @Column()
   password: string;
+
+  @ManyToMany((type => Recipe), (recipe) => recipe.users)
+  @JoinTable()
+  favorites: Recipe[];
 };

@@ -6,9 +6,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  ManyToMany,
   JoinTable,
 } from 'typeorm';
-import Category from './Category';
+import { User, Category } from '.';
 
 @Entity()
 export default class Recipe {
@@ -27,4 +28,7 @@ export default class Recipe {
     @ManyToOne((type) => Category, (category) => category.recipes)
     @JoinTable()
     category: Category;
+
+    @ManyToMany((type) => User, (user) => user.favorites)
+    users: User[]
 };
