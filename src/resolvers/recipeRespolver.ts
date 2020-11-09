@@ -144,9 +144,19 @@ export default {
       const result = await RecipeRepository.findOne(id);
       return result;
     },
-    getMyRecipes: async () => {
-
-    }
+    getMyRecipes: async (_:any, __:any, ctx:{user:User}) => {
+      const {user} = ctx;
+      if (user === undefined) {
+        throw new Error('Error with authentication. Please login again');
+      }
+      const UserRepository = getRepository(User);
+      const userExists = await UserRepository
+          .findOne({id: user.id},{relations: ['favorites']});
+      if (userExists === undefined) {
+        throw new Error('The user does not exist');
+      }
+      return userExists.favorites;
+    },
   },
   Mutation: {
     createRecipe: async (_:any,
@@ -186,8 +196,8 @@ export default {
       return result;
     },
     updateRecipe: async (_:any,
-      {id, input}:{id:number, input:RecipeInput},
-      ctx:{user:User},
+        {id, input}:{id:number, input:RecipeInput},
+        ctx:{user:User},
     ) => {
       const {user} = ctx;
       const {category, description, ingredients, name} = input;
@@ -214,13 +224,13 @@ export default {
         recipeToUpdate.name = name;
       }
       if (ingredients !== undefined) {
-        recipeToUpdate.ingredients = ingredients
-      } 
+        recipeToUpdate.ingredients = ingredients;
+      }
       if (description === undefined) {
         recipeToUpdate.description= description;
       }
       recipeToUpdate.category = categoryExists;
-      const results = await RecipeRepository.save(recipeToUpdate);
+      await RecipeRepository.save(recipeToUpdate);
       return 'Recipe deleted';
     },
     deleteRecipe: async (_:any, {id}:{id:number}, ctx:{user: User}) => {
@@ -229,7 +239,8 @@ export default {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
-      const userExists = await UserRepository.findOne({id: user.id},{relations: ['favorites']});
+      const userExists = await UserRepository
+          .findOne({id: user.id}, {relations: ['favorites']});
       if (!userExists) {
         throw new Error('The user does not exist');
       }
@@ -243,12 +254,13 @@ export default {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
-      const userExists = await UserRepository.findOne({id: user.id},{relations: ['favorites']});
+      const userExists = await UserRepository
+          .findOne({id: user.id}, {relations: ['favorites']});
       if (!userExists) {
         throw new Error('The user does not exist');
       }
       const RecipeRepository = getRepository(Recipe);
-      const recipeToFavs = await RecipeRepository.findOne({id});      
+      const recipeToFavs = await RecipeRepository.findOne({id});
       if (recipeToFavs === undefined) {
         throw new Error('Recipe not fount');
       }
@@ -262,12 +274,14 @@ export default {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
-      const userExists = await UserRepository.findOne({id: user.id},{relations: ['favorites']});
+      const userExists = await UserRepository
+          .findOne({id: user.id}, {relations: ['favorites']});
       if (!userExists) {
         throw new Error('The user does not exist');
       }
       console.log(userExists.favorites);
-      userExists.favorites = userExists.favorites.filter((element) => element.id != id);
+      userExists.favorites = userExists.favorites
+          .filter((element) => element.id != id);
       await UserRepository.save(userExists);
       return 'The recipe no longer belongs to your recipes';
     },

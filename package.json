@@ -7,7 +7,7 @@
       "start": "ts-node src/index.ts",
       "test": "echo \"Error: no test specified\" && exit 1",
       "dev": "nodemon -e ts -w ./src -x npm run watcher",
-      "watcher": "ts-node --type-check src/index.ts"
+      "watcher": "ts-node src/index.ts"
    },
    "repository": {
       "type": "git",
@@ -24,13 +24,14 @@
       "apollo-server": "^2.19.0",
       "apollo-server-express": "^2.19.0",
       "bcryptjs": "^2.4.3",
+      "body-parser": "^1.18.1",
       "express": "^4.15.4",
+      "graphql": "^15.4.0",
       "jsonwebtoken": "^8.5.1",
       "node": "^15.0.1",
       "pg": "^8.4.0",
       "reflect-metadata": "^0.1.10",
-      "typeorm": "0.2.29",
-      "body-parser": "^1.18.1"
+      "typeorm": "0.2.29"
    },
    "devDependencies": {
       "@types/bcryptjs": "^2.4.2",

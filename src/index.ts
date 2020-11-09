@@ -24,7 +24,7 @@ const startServer = async () => {
           console.log('There was an error');
         }
       }
-    }
+    },
   });
 
   const app = express();
