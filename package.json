@@ -8,6 +8,10 @@
    "main": "index.ts",
    "scripts": {
       "start": "node build/index.js",
+      "postinstall": "tsc",
+      "watch-node": "nodemon build/index.js",
+      "watch-ts": "tsc -w",
+      "deploy": "git add . && git commmit -m Heroku && git push heroku master",
       "test": "echo \"Error: no test specified\" && exit 1",
       "dev": "nodemon -e ts -w ./src -x npm run watcher",
       "watcher": "ts-node --type-check src/index.ts"
