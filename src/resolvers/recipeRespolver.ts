@@ -248,19 +248,28 @@ export default {
         throw new Error('The user does not exist');
       }
       const RecipeRepository = getRepository(Recipe);
-      const recipeToFavs = await RecipeRepository.findOne({id});
-      console.log(recipeToFavs);
-      
+      const recipeToFavs = await RecipeRepository.findOne({id});      
       if (recipeToFavs === undefined) {
         throw new Error('Recipe not fount');
       }
       userExists.favorites.push(recipeToFavs);
-      console.log(userExists);
       const result = await UserRepository.save(userExists);
       return result;
     },
-    removeFromMyRecipes: async () => {
-
+    removeFromMyRecipes: async (_:any, {id}:{id:number}, ctx:{user:User}) => {
+      const {user} = ctx;
+      if (user === undefined) {
+        throw new Error('Error with authentication. Please login again');
+      }
+      const UserRepository = getRepository(User);
+      const userExists = await UserRepository.findOne({id: user.id},{relations: ['favorites']});
+      if (!userExists) {
+        throw new Error('The user does not exist');
+      }
+      console.log(userExists.favorites);
+      userExists.favorites = userExists.favorites.filter((element) => element.id != id);
+      await UserRepository.save(userExists);
+      return 'The recipe no longer belongs to your recipes';
     },
   },
 };

@@ -30,5 +30,6 @@ export default class Recipe {
     category: Category;
 
     @ManyToMany((type) => User, (user) => user.favorites)
+    @JoinTable()
     users: User[]
 };
