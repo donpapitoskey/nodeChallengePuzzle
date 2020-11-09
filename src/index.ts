@@ -9,6 +9,7 @@ import resolvers from './resolvers';
 import connectDB from './db';
 
 const startServer = async () => {
+  console.log('passed here');
   await connectDB();
 
   const server = new ApolloServer({
@@ -35,7 +36,7 @@ const startServer = async () => {
 
   server.applyMiddleware({app, path: '/graphql'});
 
-  const PORT = process.env.PORT || 3000;
+  const PORT = config.port || 3000;
 
   app.listen(PORT, () => {
     console.log(`GraphQL endpoint locally at url: http://localhost:${PORT}${server.graphqlPath}`);

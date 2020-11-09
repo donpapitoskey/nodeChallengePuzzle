@@ -74,5 +74,9 @@
         "suppressWhileTypeErrorsPresent": false
       }
     ]
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "build"
+  ]
 }
