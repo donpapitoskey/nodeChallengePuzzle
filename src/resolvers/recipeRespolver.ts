@@ -221,10 +221,21 @@ export default {
       }
       recipeToUpdate.category = categoryExists;
       const results = await RecipeRepository.save(recipeToUpdate);
-      return results;
+      return 'Recipe deleted';
     },
-    deleteRecipe: async () => {
-      
+    deleteRecipe: async (_:any, {id}:{id:number}, ctx:{user: User}) => {
+      const {user} = ctx;
+      if (user === undefined) {
+        throw new Error('Error with authentication. Please login again');
+      }
+      const UserRepository = getRepository(User);
+      const userExists = await UserRepository.findOne({id: user.id},{relations: ['favorites']});
+      if (!userExists) {
+        throw new Error('The user does not exist');
+      }
+      const RecipeRepository = getRepository(Recipe);
+      const results = await RecipeRepository.delete({id});
+      return results;
     },
     addToMyRecipes: async (_:any, {id}:{id:number}, ctx:{user: User}) => {
       const {user} = ctx;
