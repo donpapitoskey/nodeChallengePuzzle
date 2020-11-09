@@ -144,8 +144,17 @@ export default {
       const result = await RecipeRepository.findOne(id);
       return result;
     },
-    getMyRecipes: async () => {
-
+    getMyRecipes: async (_:any, __:any, ctx:{user:User}) => {
+      const {user} = ctx;
+      if (user === undefined) {
+        throw new Error('Error with authentication. Please login again');
+      }
+      const UserRepository = getRepository(User);
+      const userExists = await UserRepository.findOne({id: user.id});
+      if (userExists === undefined) {
+        throw new Error('The user does not exist');
+      }
+      console.log(userExists);
     },
   },
   Mutation: {
