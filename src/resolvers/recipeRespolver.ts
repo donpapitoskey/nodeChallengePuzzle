@@ -150,11 +150,20 @@ export default {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
+<<<<<<< HEAD
       const userExists = await UserRepository.findOne({id: user.id});
       if (userExists === undefined) {
         throw new Error('The user does not exist');
       }
       console.log(userExists);
+=======
+      const userExists = await UserRepository
+          .findOne({id: user.id},{relations: ['favorites']});
+      if (userExists === undefined) {
+        throw new Error('The user does not exist');
+      }
+      return userExists.favorites;
+>>>>>>> my-temp
     },
   },
   Mutation: {
@@ -278,6 +287,10 @@ export default {
       if (!userExists) {
         throw new Error('The user does not exist');
       }
+<<<<<<< HEAD
+=======
+      console.log(userExists.favorites);
+>>>>>>> my-temp
       userExists.favorites = userExists.favorites
           .filter((element) => element.id != id);
       await UserRepository.save(userExists);
