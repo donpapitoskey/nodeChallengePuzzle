@@ -15,6 +15,7 @@ This server was deployed with [Heroku](https://dashboard.heroku.com/) and has a 
 ## Main libraries
 
 The necessary libraries for the development of this project were:
+
     - "apollo-server": "^2.19.0",
     - "bcryptjs": "^2.4.3",
     - "body-parser": "^1.18.1",
