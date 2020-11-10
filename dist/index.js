@@ -40,6 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
+var dotenv_1 = __importDefault(require("dotenv"));
 var apollo_server_express_1 = require("apollo-server-express");
 var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
@@ -48,6 +49,7 @@ var config_1 = __importDefault(require("./config"));
 var schemas_1 = __importDefault(require("./schemas"));
 var resolvers_1 = __importDefault(require("./resolvers"));
 var db_1 = __importDefault(require("./db"));
+dotenv_1.default.config();
 var startServer = function () { return __awaiter(void 0, void 0, void 0, function () {
     var server, app, PORT;
     return __generator(this, function (_a) {

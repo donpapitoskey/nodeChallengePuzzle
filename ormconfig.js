@@ -1,14 +1,12 @@
+console.log('process.env.DATABASE_URL >>>> ', process.env.DATABASE_URL);
+module.exports =
 {
    "type": "postgres",
-   "host": "localhost",
-   "port": 5432,
-   "username": "me",
-   "password": "password",
-   "database": "api",
+   "url": process.env.DATABASE_URL,
    "synchronize": true,
    "logging": false,
    "entities": [
-      "src/entity/**/*.ts"
+      "dist/entity/**/*.js"
    ],
    "cli": {
       "entitiesDir": "src/entity",
