@@ -1,16 +1,16 @@
 # nodeChallengePuzzle
 
 This project was created with :
- -  tsconfig CLI https://www.typescriptlang.org/
- -  npm https://www.npmjs.com/
+ -  [tsconfig CLI](https://www.typescriptlang.org/)
+ -  [npm](https://www.npmjs.com/)
 
 And was deployed in Heroku
 
 ### Backend Challenge - Recipe Book
 
-This is a project developed to explore the design of a GraphQL Server with Apollo to provide the user store, create and fetch information related to cooking and recipies into an SQL Database ![PostgreSQL](https://www.postgresql.org/). 
+This is a project developed to explore the design of a GraphQL Server with Apollo to provide the user store, create and fetch information related to cooking and recipies into an SQL Database [PostgreSQL](https://www.postgresql.org/). 
 
-This server was deployed with ![Heroku](https://dashboard.heroku.com/) and has a playground ![API](https://backend-challenge-puzzle.herokuapp.com/).
+This server was deployed with [Heroku](https://dashboard.heroku.com/) and has a playground [API](https://backend-challenge-puzzle.herokuapp.com/).
 
 ## Main libraries
 
