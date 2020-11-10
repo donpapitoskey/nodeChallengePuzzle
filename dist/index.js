@@ -52,9 +52,7 @@ var startServer = function () { return __awaiter(void 0, void 0, void 0, functio
     var server, PORT;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                console.log('passed here');
-                return [4 /*yield*/, db_1.default()];
+            case 0: return [4 /*yield*/, db_1.default()];
             case 1:
                 _a.sent();
                 server = new apollo_server_1.ApolloServer({
