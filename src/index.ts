@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import dotenv from 'dotenv';
 import {ApolloServer} from 'apollo-server-express';
+import expressPlayground from 'graphql-playground-middleware-express';
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
@@ -38,6 +39,8 @@ const startServer = async () => {
   app.use(express.json());
 
   server.applyMiddleware({app, path: '/graphql'});
+
+  app.get('/playground', expressPlayground({endpoint: '/grapqhl'}));
 
   const PORT = process.env.PORT || 3000;
 
