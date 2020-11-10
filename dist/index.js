@@ -79,6 +79,8 @@ var startServer = function () { return __awaiter(void 0, void 0, void 0, functio
                     var url = _a.url;
                     console.log("server ready at: " + url);
                     // console.log(`GraphQL endpoint locally at url: http://localhost:${PORT}${server.graphqlPath}`);
+                }).catch(function (error) {
+                    console.log(error);
                 });
                 return [2 /*return*/];
         }

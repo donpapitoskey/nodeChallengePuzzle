@@ -45,6 +45,8 @@ const startServer = async () => {
   server.listen({port: PORT}).then( ({url}:{url:string}) => {
     console.log(`server ready at: ${url}`);
     // console.log(`GraphQL endpoint locally at url: http://localhost:${PORT}${server.graphqlPath}`);
+  }).catch( (error) => {
+    console.log(error);
   });
 };
 
