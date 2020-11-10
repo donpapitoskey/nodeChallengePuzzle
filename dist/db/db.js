@@ -35,54 +35,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-require("reflect-metadata");
-var apollo_server_express_1 = require("apollo-server-express");
-var express_1 = __importDefault(require("express"));
-var cors_1 = __importDefault(require("cors"));
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var config_1 = __importDefault(require("./config"));
-var schemas_1 = __importDefault(require("./schemas"));
-var resolvers_1 = __importDefault(require("./resolvers"));
-var db_1 = __importDefault(require("./db"));
-var startServer = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var server, app, PORT;
+var typeorm_1 = require("typeorm");
+var connectDB = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, db_1.default()];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                console.log('awaiting DB connection');
+                return [4 /*yield*/, typeorm_1.createConnection()];
             case 1:
                 _a.sent();
-                server = new apollo_server_express_1.ApolloServer({
-                    typeDefs: schemas_1.default,
-                    resolvers: resolvers_1.default,
-                    context: function (_a) {
-                        var req = _a.req;
-                        var token = req.headers['authorization'] || '';
-                        if (token) {
-                            try {
-                                var user = jsonwebtoken_1.default.verify(token, config_1.default.jwtSecret);
-                                return { user: user };
-                            }
-                            catch (error) {
-                                console.log('There was an error');
-                            }
-                        }
-                    },
-                });
-                app = express_1.default();
-                app.use(cors_1.default());
-                app.use(express_1.default.json());
-                server.applyMiddleware({ app: app, path: '/graphql' });
-                PORT = process.env.PORT || 3000;
-                app.listen(PORT, function () {
-                    console.log("GraphQL endpoint locally at url: http://localhost:" + PORT + server.graphqlPath);
-                });
-                return [2 /*return*/];
+                console.log('database Connected');
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _a.sent();
+                console.log('There was an error');
+                console.log(error_1);
+                process.exit();
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
-startServer();
-//# sourceMappingURL=index.js.map
+exports.default = connectDB;
+//# sourceMappingURL=db.js.map
