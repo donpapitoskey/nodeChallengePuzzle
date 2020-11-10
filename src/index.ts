@@ -13,7 +13,8 @@ const startServer = async () => {
   await connectDB();
 
   const server = new ApolloServer({
-    apollo: {key: process.env.APOLLO_KEY},
+    playground: true,
+    introspection: true,
     typeDefs,
     resolvers,
     context: ({req}) => {
