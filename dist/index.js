@@ -80,7 +80,7 @@ var startServer = function () { return __awaiter(void 0, void 0, void 0, functio
                 app.use(cors_1.default());
                 app.use(express_1.default.json());
                 server.applyMiddleware({ app: app, path: '/graphql' });
-                PORT = config_1.default.port || 3000;
+                PORT = process.env.PORT || 3000;
                 app.listen(PORT, function () {
                     console.log("GraphQL endpoint locally at url: http://localhost:" + PORT + server.graphqlPath);
                 });

@@ -39,7 +39,7 @@ const startServer = async () => {
 
   server.applyMiddleware({app, path: '/graphql'});
 
-  const PORT = config.port || 3000;
+  const PORT = process.env.PORT || 3000;
 
   app.listen(PORT, () => {
     console.log(`GraphQL endpoint locally at url: http://localhost:${PORT}${server.graphqlPath}`);
