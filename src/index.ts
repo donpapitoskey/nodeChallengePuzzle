@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import dotenv from 'dotenv';
-import {ApolloServer} from 'apollo-server-express';
+import {ApolloServer} from 'apollo-server';
+//import {ApolloServer} from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
 import express from 'express';
 import cors from 'cors';
@@ -32,20 +33,22 @@ const startServer = async () => {
     },
   });
 
-  const app = express();
+  // const app = express();
 
-  app.use(cors());
+  // app.use(cors());
 
-  app.use(express.json());
+  // app.use(express.json());
 
-  server.applyMiddleware({app, path: '/graphql'});
+  // server.applyMiddleware({app, path: '/graphql'});
 
-  app.get('/playground', expressPlayground({endpoint: '/grapqhl'}));
+  // app.get('/playground', expressPlayground({endpoint: '/grapqhl'}));
 
   const PORT = process.env.PORT || 3000;
 
-  app.listen(PORT, () => {
-    console.log(`GraphQL endpoint locally at url: http://localhost:${PORT}${server.graphqlPath}`);
+  // app.listen(PORT, () => {
+  server.listen(PORT, ({url}) => {
+    console.log(`server ready at: ${url}`);
+    // console.log(`GraphQL endpoint locally at url: http://localhost:${PORT}${server.graphqlPath}`);
   });
 };
 
