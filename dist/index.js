@@ -41,9 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 var dotenv_1 = __importDefault(require("dotenv"));
-var apollo_server_express_1 = require("apollo-server-express");
-var express_1 = __importDefault(require("express"));
-var cors_1 = __importDefault(require("cors"));
+var apollo_server_1 = require("apollo-server");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var config_1 = __importDefault(require("./config"));
 var schemas_1 = __importDefault(require("./schemas"));
@@ -51,7 +49,7 @@ var resolvers_1 = __importDefault(require("./resolvers"));
 var db_1 = __importDefault(require("./db"));
 dotenv_1.default.config();
 var startServer = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var server, app, PORT;
+    var server, PORT;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -59,7 +57,7 @@ var startServer = function () { return __awaiter(void 0, void 0, void 0, functio
                 return [4 /*yield*/, db_1.default()];
             case 1:
                 _a.sent();
-                server = new apollo_server_express_1.ApolloServer({
+                server = new apollo_server_1.ApolloServer({
                     typeDefs: schemas_1.default,
                     resolvers: resolvers_1.default,
                     context: function (_a) {
@@ -76,13 +74,12 @@ var startServer = function () { return __awaiter(void 0, void 0, void 0, functio
                         }
                     },
                 });
-                app = express_1.default();
-                app.use(cors_1.default());
-                app.use(express_1.default.json());
-                server.applyMiddleware({ app: app, path: '/graphql' });
                 PORT = process.env.PORT || 3000;
-                app.listen(PORT, function () {
-                    console.log("GraphQL endpoint locally at url: http://localhost:" + PORT + server.graphqlPath);
+                // app.listen(PORT, () => {
+                server.listen(PORT, function (_a) {
+                    var url = _a.url;
+                    console.log("server ready at: " + url);
+                    // console.log(`GraphQL endpoint locally at url: http://localhost:${PORT}${server.graphqlPath}`);
                 });
                 return [2 /*return*/];
         }
