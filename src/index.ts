@@ -1,10 +1,6 @@
 import 'reflect-metadata';
 import dotenv from 'dotenv';
 import {ApolloServer} from 'apollo-server';
-//import {ApolloServer} from 'apollo-server-express';
-import expressPlayground from 'graphql-playground-middleware-express';
-import express from 'express';
-import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import config from './config';
 import typeDefs from './schemas';
