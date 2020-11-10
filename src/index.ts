@@ -30,22 +30,10 @@ const startServer = async () => {
     },
   });
 
-  // const app = express();
-
-  // app.use(cors());
-
-  // app.use(express.json());
-
-  // server.applyMiddleware({app, path: '/graphql'});
-
-  // app.get('/playground', expressPlayground({endpoint: '/grapqhl'}));
-
   const PORT = process.env.PORT || 3000;
 
-  // app.listen(PORT, () => {
   server.listen({port: PORT}).then( ({url}:{url:string}) => {
     console.log(`server ready at: ${url}`);
-    // console.log(`GraphQL endpoint locally at url: http://localhost:${PORT}${server.graphqlPath}`);
   }).catch( (error) => {
     console.log(error);
   });

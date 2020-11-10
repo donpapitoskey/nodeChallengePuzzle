@@ -75,11 +75,9 @@ var startServer = function () { return __awaiter(void 0, void 0, void 0, functio
                     },
                 });
                 PORT = process.env.PORT || 3000;
-                // app.listen(PORT, () => {
                 server.listen({ port: PORT }).then(function (_a) {
                     var url = _a.url;
                     console.log("server ready at: " + url);
-                    // console.log(`GraphQL endpoint locally at url: http://localhost:${PORT}${server.graphqlPath}`);
                 }).catch(function (error) {
                     console.log(error);
                 });
