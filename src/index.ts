@@ -10,7 +10,6 @@ import connectDB from './db';
 dotenv.config();
 
 const startServer = async () => {
-  console.log('passed here');
   await connectDB();
 
   const server = new ApolloServer({
