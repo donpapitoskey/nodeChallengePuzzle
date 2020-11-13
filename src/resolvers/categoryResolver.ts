@@ -18,7 +18,7 @@ export default {
       const result = await CategoryRepository.find();
       return result;
     },
-    getOneCategory: async (_:any, {id}:{id:string}, ctx:{user:User}) => {
+    getOneCategory: async (_:any, {id}:{id:number}, ctx:{user:User}) => {
       const {user} = ctx;
       const CategoryRepository = getRepository(Category);
       if (user === undefined) {
@@ -40,6 +40,9 @@ export default {
         ctx:{user:User},
     ) => {
       const {name} = input;
+      if (name === '') {
+        throw new Error('The name is mandatory');
+      }
       const CategoryRepository = getRepository(Category);
       if (ctx.user === undefined) {
         throw new Error('Error with authentication. Please login again');
@@ -61,6 +64,10 @@ export default {
         {id, input}:{id:number, input:Category},
         ctx:{user:User},
     ) => {
+      const {name} = input;
+      if (name === '') {
+        throw new Error('The name is mandatory');
+      }
       const {user} = ctx;
       if (user === undefined) {
         throw new Error('Error with authentication. Please login again');

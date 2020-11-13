@@ -109,6 +109,9 @@ exports.default = {
                     switch (_b.label) {
                         case 0:
                             name = input.name;
+                            if (name === '') {
+                                throw new Error('The name is mandatory');
+                            }
                             CategoryRepository = typeorm_1.getRepository(entity_1.Category);
                             if (ctx.user === undefined) {
                                 throw new Error('Error with authentication. Please login again');
@@ -141,10 +144,14 @@ exports.default = {
         updateCategory: function (_, _a, ctx) {
             var id = _a.id, input = _a.input;
             return __awaiter(void 0, void 0, void 0, function () {
-                var user, UserRepository, error_4, CategoryRepository, categoryToUpdate, result;
+                var name, user, UserRepository, error_4, CategoryRepository, categoryToUpdate, result;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
+                            name = input.name;
+                            if (name === '') {
+                                throw new Error('The name is mandatory');
+                            }
                             user = ctx.user;
                             if (user === undefined) {
                                 throw new Error('Error with authentication. Please login again');
