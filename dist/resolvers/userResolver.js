@@ -56,11 +56,14 @@ exports.default = {
         signUp: function (_, _a) {
             var input = _a.input;
             return __awaiter(void 0, void 0, void 0, function () {
-                var email, password, UserRepository, userExists, salt, _b;
+                var email, password, name, UserRepository, userExists, salt, _b;
                 return __generator(this, function (_c) {
                     switch (_c.label) {
                         case 0:
-                            email = input.email, password = input.password;
+                            email = input.email, password = input.password, name = input.name;
+                            if (email === '' || password === '' || name === '') {
+                                throw new Error('The email, password and name are required fields');
+                            }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
                             return [4 /*yield*/, UserRepository.findOne({ email: email })];
                         case 1:
@@ -95,12 +98,15 @@ exports.default = {
                     switch (_b.label) {
                         case 0:
                             email = input.email, password = input.password;
+                            if (email === '' || password === '') {
+                                throw new Error('Email and password are required fields');
+                            }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
                             return [4 /*yield*/, UserRepository.findOne({ email: email })];
                         case 1:
                             userExists = _b.sent();
                             if (!userExists) {
-                                throw new Error('This user already exists');
+                                throw new Error('This user does not exists');
                             }
                             return [4 /*yield*/, bcryptjs_1.default
                                     .compare(password, userExists.password)];

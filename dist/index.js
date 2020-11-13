@@ -56,8 +56,8 @@ var startServer = function () { return __awaiter(void 0, void 0, void 0, functio
             case 1:
                 _a.sent();
                 server = new apollo_server_1.ApolloServer({
-                    playground: true,
-                    introspection: true,
+                    // playground: true,
+                    // introspection: true,
                     typeDefs: schemas_1.default,
                     resolvers: resolvers_1.default,
                     context: function (_a) {

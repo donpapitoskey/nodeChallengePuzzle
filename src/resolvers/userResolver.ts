@@ -19,7 +19,10 @@ const createToken = ({user, secret, expiresIn}:Token):string => {
 export default {
   Mutation: {
     signUp: async (_:any, {input}:{input:User}) => {
-      const {email, password} = input;
+      const {email, password, name} = input;
+      if (email === '' || password === '' || name === '') {
+        throw new Error('The email, password and name are required fields');
+      }
       const UserRepository = getRepository(User);
       const userExists = await UserRepository.findOne({email});
       if (userExists) {
@@ -38,10 +41,13 @@ export default {
     },
     login: async (_:any, {input}:{input:User}) => {
       const {email, password} = input;
+      if (email === '' || password === '') {
+        throw new Error('Email and password are required fields');
+      }
       const UserRepository = getRepository(User);
       const userExists:User | undefined = await UserRepository.findOne({email});
       if (!userExists) {
-        throw new Error('This user already exists');
+        throw new Error('This user does not exists');
       }
       const passwortCheck = await bcryptjs
           .compare(password, userExists.password);
