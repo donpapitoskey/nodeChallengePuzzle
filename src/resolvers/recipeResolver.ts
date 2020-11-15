@@ -270,8 +270,8 @@ export default {
         throw new Error('The user does not exist');
       }
       const RecipeRepository = getRepository(Recipe);
-      const results = await RecipeRepository.delete({id});
-      return results;
+      await RecipeRepository.delete({id});
+      return 'Recipe deleted!';
     },
     addToMyRecipes: async (_:any, {id}:{id:number}, ctx:{user: User}) => {
       const {user} = ctx;

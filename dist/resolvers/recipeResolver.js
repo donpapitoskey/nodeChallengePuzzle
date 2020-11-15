@@ -335,7 +335,7 @@ exports.default = {
         deleteRecipe: function (_, _a, ctx) {
             var id = _a.id;
             return __awaiter(void 0, void 0, void 0, function () {
-                var user, UserRepository, userExists, RecipeRepository, results;
+                var user, UserRepository, userExists, RecipeRepository;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
@@ -354,8 +354,8 @@ exports.default = {
                             RecipeRepository = typeorm_1.getRepository(entity_1.Recipe);
                             return [4 /*yield*/, RecipeRepository.delete({ id: id })];
                         case 2:
-                            results = _b.sent();
-                            return [2 /*return*/, results];
+                            _b.sent();
+                            return [2 /*return*/, 'Recipe deleted!'];
                     }
                 });
             });
