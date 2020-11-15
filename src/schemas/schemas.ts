@@ -58,7 +58,7 @@ const schemas = gql`
   input RecipeInputFiltering {
     name: String
     ingredients: [String]
-    category: String
+    category: ID
   }
 
   type Query {

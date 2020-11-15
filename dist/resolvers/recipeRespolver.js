@@ -45,42 +45,50 @@ var ingredientsSearchCriteria = function (input) {
     output = output.concat(input.toString(), '}');
     return output;
 };
+var validateInputs = function (name, ingredients, category) {
+    var nameValid = name !== undefined && name !== null;
+    var categoryValid = category !== undefined && category !== null;
+    var ingredientsValid = ingredients !== undefined && ingredients !== null;
+    return [nameValid, categoryValid, ingredientsValid];
+};
 exports.default = {
     Query: {
         getRecipes: function (_, _a, ctx) {
             var filtering = _a.filtering;
             return __awaiter(void 0, void 0, void 0, function () {
-                var user, UserRepository, error_1, RecipeRepository, results_1, name, ingredients, category, results_2, results_3, searchIngredients_1, results_4, results_5, CategoryRepository, categoryExists, searchCategory, results_6, results_7, searchIngredients, results_8, results;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
+                var user, UserRepository, error_1, RecipeRepository, results_1, name, category, ingredients, _b, nameValid, categoryValid, ingredientsValid, results_2, results_3, searchIngredients_1, results_4, results_5, CategoryRepository, categoryExists, searchCategory, results_6, results_7, searchIngredients, results_8, results;
+                return __generator(this, function (_c) {
+                    switch (_c.label) {
                         case 0:
                             user = ctx.user;
                             if (user === undefined) {
                                 throw new Error('Error with authentication. Please login again');
                             }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
-                            _b.label = 1;
+                            _c.label = 1;
                         case 1:
-                            _b.trys.push([1, 3, , 4]);
+                            _c.trys.push([1, 3, , 4]);
                             return [4 /*yield*/, UserRepository.findOne({ id: user.id })];
                         case 2:
-                            _b.sent();
+                            _c.sent();
                             return [3 /*break*/, 4];
                         case 3:
-                            error_1 = _b.sent();
+                            error_1 = _c.sent();
                             throw new Error('The user does not exist');
                         case 4:
                             RecipeRepository = typeorm_1.getRepository(entity_1.Recipe);
                             if (!(filtering === undefined)) return [3 /*break*/, 6];
                             return [4 /*yield*/, RecipeRepository.find({ relations: ['category'] })];
                         case 5:
-                            results_1 = _b.sent();
+                            results_1 = _c.sent();
                             return [2 /*return*/, results_1];
                         case 6:
-                            name = filtering.name, ingredients = filtering.ingredients, category = filtering.category;
-                            if (!(category === undefined)) return [3 /*break*/, 12];
-                            if (!(ingredients === undefined)) return [3 /*break*/, 8];
-                            if (name === undefined) {
+                            name = filtering.name, category = filtering.category, ingredients = filtering.ingredients;
+                            _b = validateInputs(name, ingredients, category), nameValid = _b[0], categoryValid = _b[1], ingredientsValid = _b[2];
+                            console.log(nameValid, ingredientsValid, categoryValid);
+                            if (!!categoryValid) return [3 /*break*/, 12];
+                            if (!!ingredientsValid) return [3 /*break*/, 8];
+                            if (!nameValid) {
                                 results_2 = new entity_1.Recipe();
                                 return [2 /*return*/, [results_2]];
                             }
@@ -90,46 +98,44 @@ exports.default = {
                                     .where('recipe.name ~~* :name', { name: "%" + name + "%" })
                                     .getMany()];
                         case 7:
-                            results_3 = _b.sent();
+                            results_3 = _c.sent();
                             return [2 /*return*/, results_3];
                         case 8:
                             searchIngredients_1 = ingredientsSearchCriteria(ingredients);
-                            if (!(name === undefined)) return [3 /*break*/, 10];
+                            if (!!nameValid) return [3 /*break*/, 10];
                             return [4 /*yield*/, RecipeRepository
                                     .createQueryBuilder('recipe')
                                     .leftJoinAndSelect('recipe.category', 'category')
-                                    .where('recipe.ingredients @> :ingredient', { ingredient: searchIngredients_1 }).orWhere('recipe.ingredients @> :ingredient', { ingredient: searchIngredients_1 })
-                                    .getMany()];
+                                    .where('recipe.ingredients @> :ingredient', { ingredient: searchIngredients_1 }).getMany()];
                         case 9:
-                            results_4 = _b.sent();
+                            results_4 = _c.sent();
                             return [2 /*return*/, results_4];
                         case 10: return [4 /*yield*/, RecipeRepository
                                 .createQueryBuilder('recipe')
                                 .leftJoinAndSelect('recipe.category', 'category')
                                 .where('recipe.name ~~* :name', { name: "%" + name + "%" })
-                                .andWhere('recipe.ingredients @> :ingredient', { ingredient: searchIngredients_1 }).orWhere('recipe.ingredients @> :ingredient', { ingredient: searchIngredients_1 })
-                                .getMany()];
+                                .andWhere('recipe.ingredients @> :ingredient', { ingredient: searchIngredients_1 }).getMany()];
                         case 11:
-                            results_5 = _b.sent();
+                            results_5 = _c.sent();
                             return [2 /*return*/, results_5];
                         case 12:
                             CategoryRepository = typeorm_1.getRepository(entity_1.Category);
-                            return [4 /*yield*/, CategoryRepository.findOne({ name: category })];
+                            return [4 /*yield*/, CategoryRepository.findOne({ id: category })];
                         case 13:
-                            categoryExists = _b.sent();
+                            categoryExists = _c.sent();
                             if (!categoryExists) {
                                 throw new Error('This category does not exists');
                             }
                             searchCategory = categoryExists.id;
-                            if (!(ingredients === undefined)) return [3 /*break*/, 17];
-                            if (!(name === undefined)) return [3 /*break*/, 15];
+                            if (!!ingredientsValid) return [3 /*break*/, 17];
+                            if (!!nameValid) return [3 /*break*/, 15];
                             return [4 /*yield*/, RecipeRepository
                                     .createQueryBuilder('recipe')
                                     .leftJoinAndSelect('recipe.category', 'category')
                                     .where('recipe.category = :category', { category: searchCategory })
                                     .getMany()];
                         case 14:
-                            results_6 = _b.sent();
+                            results_6 = _c.sent();
                             return [2 /*return*/, results_6];
                         case 15: return [4 /*yield*/, RecipeRepository
                                 .createQueryBuilder('recipe')
@@ -138,18 +144,18 @@ exports.default = {
                                 .andWhere('recipe.category = :category', { category: searchCategory })
                                 .getMany()];
                         case 16:
-                            results_7 = _b.sent();
+                            results_7 = _c.sent();
                             return [2 /*return*/, results_7];
                         case 17:
                             searchIngredients = ingredientsSearchCriteria(ingredients);
-                            if (!(name === undefined)) return [3 /*break*/, 19];
+                            if (!!nameValid) return [3 /*break*/, 19];
                             return [4 /*yield*/, RecipeRepository
                                     .createQueryBuilder('recipe')
                                     .leftJoinAndSelect('recipe.category', 'category')
                                     .where('recipe.category = :category', { category: searchCategory })
                                     .andWhere('recipe.ingredients @> :ingredient', { ingredient: searchIngredients }).getMany()];
                         case 18:
-                            results_8 = _b.sent();
+                            results_8 = _c.sent();
                             return [2 /*return*/, results_8];
                         case 19: return [4 /*yield*/, RecipeRepository
                                 .createQueryBuilder('recipe')
@@ -159,7 +165,7 @@ exports.default = {
                                 .andWhere('recipe.ingredients @> :ingredient', { ingredient: searchIngredients })
                                 .getMany()];
                         case 20:
-                            results = _b.sent();
+                            results = _c.sent();
                             return [2 /*return*/, results];
                     }
                 });
@@ -279,6 +285,9 @@ exports.default = {
                         case 0:
                             user = ctx.user;
                             category = input.category, description = input.description, ingredients = input.ingredients, name = input.name;
+                            if (name === '' || description === '' || ingredients[0] === '') {
+                                throw new Error('Name, description, and ingredients are mandatory');
+                            }
                             if (user === undefined) {
                                 throw new Error('Error with authentication. Please login again');
                             }

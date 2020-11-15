@@ -5,7 +5,7 @@ import {getRepository} from 'typeorm';
 interface RecipeFilterInput {
   name: string;
   ingredients: string[];
-  category: string;
+  category: number;
 }
 
 interface RecipeInput {
@@ -20,6 +20,17 @@ const ingredientsSearchCriteria = (input:string[]):string => {
   input = input.map((element) => `"${element}"`);
   output = output.concat(input.toString(), '}');
   return output;
+};
+
+const validateInputs = (
+    name:string,
+    ingredients:string[],
+    category:number,
+):boolean[] => {
+  const nameValid = name !== undefined && name !== null;
+  const categoryValid = category !== undefined && category !== null;
+  const ingredientsValid = ingredients !== undefined && ingredients !== null;
+  return [nameValid, categoryValid, ingredientsValid];
 };
 
 export default {
@@ -43,11 +54,15 @@ export default {
         const results = await RecipeRepository.find({relations: ['category']});
         return results;
       }
-      const {name, ingredients, category} = filtering;
-
-      if (category === undefined || category === null) {
-        if (ingredients === undefined) {
-          if (name === undefined) {
+      const {name, category, ingredients} = filtering;
+      const [
+        nameValid,
+        categoryValid,
+        ingredientsValid,
+      ] = validateInputs(name, ingredients, category);
+      if (!categoryValid) {
+        if (!ingredientsValid) {
+          if (!nameValid) {
             const results = new Recipe();
             return [results];
           }
@@ -59,16 +74,13 @@ export default {
           return results;
         }
         const searchIngredients = ingredientsSearchCriteria(ingredients);
-        if (name === undefined) {
+        if (!nameValid) {
           const results = await RecipeRepository
               .createQueryBuilder('recipe')
               .leftJoinAndSelect('recipe.category', 'category')
               .where('recipe.ingredients @> :ingredient',
                   {ingredient: searchIngredients},
-              ).orWhere('recipe.ingredients @> :ingredient',
-                  {ingredient: searchIngredients},
-              )
-              .getMany();
+              ).getMany();
           return results;
         }
         const results = await RecipeRepository
@@ -77,20 +89,17 @@ export default {
             .where('recipe.name ~~* :name', {name: `%${name}%`})
             .andWhere('recipe.ingredients @> :ingredient',
                 {ingredient: searchIngredients},
-            ).orWhere('recipe.ingredients @> :ingredient',
-                {ingredient: searchIngredients},
-            )
-            .getMany();
+            ).getMany();
         return results;
       }
       const CategoryRepository = getRepository(Category);
-      const categoryExists = await CategoryRepository.findOne({name: category});
+      const categoryExists = await CategoryRepository.findOne({id: category});
       if (!categoryExists) {
         throw new Error('This category does not exists');
       }
       const searchCategory = categoryExists.id;
-      if (ingredients === undefined) {
-        if (name === undefined) {
+      if (!ingredientsValid) {
+        if (!nameValid) {
           const results = await RecipeRepository
               .createQueryBuilder('recipe')
               .leftJoinAndSelect('recipe.category', 'category')
@@ -108,7 +117,7 @@ export default {
         return results;
       }
       const searchIngredients = ingredientsSearchCriteria(ingredients);
-      if (name === undefined) {
+      if (!nameValid) {
         const results = await RecipeRepository
             .createQueryBuilder('recipe')
             .leftJoinAndSelect('recipe.category', 'category')
