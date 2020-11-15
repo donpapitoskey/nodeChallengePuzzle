@@ -38,6 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var entity_1 = require("../entity");
 var typeorm_1 = require("typeorm");
+var isValidInput = function (input) { return (input !== undefined && input !== null); };
 exports.default = {
     Query: {
         getCategories: function (_, __, ctx) { return __awaiter(void 0, void 0, void 0, function () {
@@ -47,7 +48,7 @@ exports.default = {
                     case 0:
                         user = ctx.user;
                         CategoryRepository = typeorm_1.getRepository(entity_1.Category);
-                        if (user === undefined) {
+                        if (!isValidInput(user)) {
                             throw new Error('Error with authentication. Please login again');
                         }
                         UserRepository = typeorm_1.getRepository(entity_1.User);
@@ -77,7 +78,7 @@ exports.default = {
                         case 0:
                             user = ctx.user;
                             CategoryRepository = typeorm_1.getRepository(entity_1.Category);
-                            if (user === undefined) {
+                            if (!isValidInput(user)) {
                                 throw new Error('Error with authentication. Please login again');
                             }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
@@ -113,7 +114,7 @@ exports.default = {
                                 throw new Error('The name is mandatory');
                             }
                             CategoryRepository = typeorm_1.getRepository(entity_1.Category);
-                            if (ctx.user === undefined) {
+                            if (!isValidInput(ctx.user)) {
                                 throw new Error('Error with authentication. Please login again');
                             }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
@@ -130,7 +131,7 @@ exports.default = {
                         case 4: return [4 /*yield*/, CategoryRepository.findOne({ name: name })];
                         case 5:
                             categoryExists = _b.sent();
-                            if (categoryExists) {
+                            if (categoryExists !== undefined) {
                                 throw new Error('This category exists already');
                             }
                             return [4 /*yield*/, CategoryRepository.save(input)];
@@ -153,7 +154,7 @@ exports.default = {
                                 throw new Error('The name is mandatory');
                             }
                             user = ctx.user;
-                            if (user === undefined) {
+                            if (!isValidInput(user)) {
                                 throw new Error('Error with authentication. Please login again');
                             }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
@@ -193,7 +194,7 @@ exports.default = {
                         case 0:
                             user = ctx.user;
                             CategoryRepository = typeorm_1.getRepository(entity_1.Category);
-                            if (user === undefined) {
+                            if (!isValidInput(user)) {
                                 throw new Error('Error with authentication. Please login again');
                             }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
@@ -210,7 +211,7 @@ exports.default = {
                         case 4: return [4 /*yield*/, CategoryRepository.delete(id)];
                         case 5:
                             affected = (_b.sent()).affected;
-                            if (!affected) {
+                            if (affected === null || affected == undefined) {
                                 throw new Error('The category does not exist');
                             }
                             return [2 /*return*/, 'Deletion completed'];

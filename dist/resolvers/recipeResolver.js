@@ -52,6 +52,7 @@ var validateRecipeInputs = function (name, ingredients, category) {
     return [nameValid, categoryValid, ingredientsValid];
 };
 var hasEmptyString = function (input) { return (input.some(function (element) { return element === ''; })); };
+var isValidInput = function (input) { return (input !== undefined && input !== null); };
 exports.default = {
     Query: {
         getRecipes: function (_, _a, ctx) {
@@ -62,7 +63,7 @@ exports.default = {
                     switch (_c.label) {
                         case 0:
                             user = ctx.user;
-                            if (user === undefined) {
+                            if (!isValidInput(user)) {
                                 throw new Error('Error with authentication. Please login again');
                             }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
@@ -179,7 +180,7 @@ exports.default = {
                     switch (_b.label) {
                         case 0:
                             user = ctx.user;
-                            if (user === undefined) {
+                            if (isValidInput(user)) {
                                 throw new Error('Error with authentication. Please login again');
                             }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
@@ -209,7 +210,7 @@ exports.default = {
                 switch (_a.label) {
                     case 0:
                         user = ctx.user;
-                        if (user === undefined) {
+                        if (isValidInput(user)) {
                             throw new Error('Error with authentication. Please login again');
                         }
                         UserRepository = typeorm_1.getRepository(entity_1.User);
@@ -240,7 +241,7 @@ exports.default = {
                             }
                             RecipeRepository = typeorm_1.getRepository(entity_1.Recipe);
                             CategoryRepository = typeorm_1.getRepository(entity_1.Category);
-                            if (user === undefined) {
+                            if (!isValidInput(user)) {
                                 throw new Error('Error with authentication. Please login again');
                             }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
@@ -288,7 +289,7 @@ exports.default = {
                             if (hasEmptyString([name, description, ingredients[0]])) {
                                 throw new Error('Name, description, and ingredients are mandatory');
                             }
-                            if (user === undefined) {
+                            if (!isValidInput(user)) {
                                 throw new Error('Error with authentication. Please login again');
                             }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
@@ -319,14 +320,14 @@ exports.default = {
                             if (ingredients !== undefined) {
                                 recipeToUpdate.ingredients = ingredients;
                             }
-                            if (description === undefined) {
+                            if (description !== undefined) {
                                 recipeToUpdate.description = description;
                             }
                             recipeToUpdate.category = categoryExists;
                             return [4 /*yield*/, RecipeRepository.save(recipeToUpdate)];
                         case 4:
                             _b.sent();
-                            return [2 /*return*/, 'Recipe deleted'];
+                            return [2 /*return*/, 'Recipe Updated'];
                     }
                 });
             });
@@ -339,7 +340,7 @@ exports.default = {
                     switch (_b.label) {
                         case 0:
                             user = ctx.user;
-                            if (user === undefined) {
+                            if (!isValidInput(user)) {
                                 throw new Error('Error with authentication. Please login again');
                             }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
@@ -367,7 +368,7 @@ exports.default = {
                     switch (_b.label) {
                         case 0:
                             user = ctx.user;
-                            if (user === undefined) {
+                            if (!isValidInput(user)) {
                                 throw new Error('Error with authentication. Please login again');
                             }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
@@ -402,7 +403,7 @@ exports.default = {
                     switch (_b.label) {
                         case 0:
                             user = ctx.user;
-                            if (user === undefined) {
+                            if (!isValidInput(user)) {
                                 throw new Error('Error with authentication. Please login again');
                             }
                             UserRepository = typeorm_1.getRepository(entity_1.User);
@@ -425,4 +426,4 @@ exports.default = {
         },
     },
 };
-//# sourceMappingURL=recipeRespolver.js.map
+//# sourceMappingURL=recipeResolver.js.map

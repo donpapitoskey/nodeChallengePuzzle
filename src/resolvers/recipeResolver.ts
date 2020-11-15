@@ -22,7 +22,7 @@ const ingredientsSearchCriteria = (input:string[]):string => {
   return output;
 };
 
-const validateInputs = (
+const validateRecipeInputs = (
     name:string,
     ingredients:string[],
     category:number,
@@ -33,6 +33,15 @@ const validateInputs = (
   return [nameValid, categoryValid, ingredientsValid];
 };
 
+const hasEmptyString = (input:string[]):boolean => (
+  input.some((element)=> element === '')
+);
+
+const isValidInput = (input:any):boolean => (
+  input !== undefined && input !== null
+);
+
+
 export default {
   Query: {
     getRecipes: async (_:any,
@@ -40,7 +49,7 @@ export default {
         ctx:{user:User},
     ):Promise<Recipe[]> => {
       const {user} = ctx;
-      if (user === undefined) {
+      if (!isValidInput(user)) {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
@@ -59,7 +68,7 @@ export default {
         nameValid,
         categoryValid,
         ingredientsValid,
-      ] = validateInputs(name, ingredients, category);
+      ] = validateRecipeInputs(name, ingredients, category);
       if (!categoryValid) {
         if (!ingredientsValid) {
           if (!nameValid) {
@@ -140,7 +149,7 @@ export default {
     },
     getOneRecipe: async (_:any, {id}:{id:number}, ctx:{user:User}) => {
       const {user} = ctx;
-      if (user === undefined) {
+      if (isValidInput(user)) {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
@@ -155,7 +164,7 @@ export default {
     },
     getMyRecipes: async (_:any, __:any, ctx:{user:User}) => {
       const {user} = ctx;
-      if (user === undefined) {
+      if (isValidInput(user)) {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
@@ -174,13 +183,13 @@ export default {
     ) => {
       const {user} = ctx;
       const {name, category, description, ingredients} = input;
-      if (name === '' || description === '' || ingredients[0] === '') {
+      if (hasEmptyString([name, description, ingredients[0]])) {
         throw new
         Error('name, description, and ingredients are mandatory');
       }
       const RecipeRepository = getRepository(Recipe);
       const CategoryRepository = getRepository(Category);
-      if (user === undefined) {
+      if (!isValidInput(user)) {
         throw new Error('Error with authentication. Please login again');
       }
 
@@ -213,11 +222,11 @@ export default {
     ) => {
       const {user} = ctx;
       const {category, description, ingredients, name} = input;
-      if (name === '' || description === '' || ingredients[0] === '') {
+      if (hasEmptyString([name, description, ingredients[0]])) {
         throw new
         Error('Name, description, and ingredients are mandatory');
       }
-      if (user === undefined) {
+      if (!isValidInput(user)) {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
@@ -242,16 +251,16 @@ export default {
       if (ingredients !== undefined) {
         recipeToUpdate.ingredients = ingredients;
       }
-      if (description === undefined) {
+      if (description !== undefined) {
         recipeToUpdate.description= description;
       }
       recipeToUpdate.category = categoryExists;
       await RecipeRepository.save(recipeToUpdate);
-      return 'Recipe deleted';
+      return 'Recipe Updated';
     },
     deleteRecipe: async (_:any, {id}:{id:number}, ctx:{user: User}) => {
       const {user} = ctx;
-      if (user === undefined) {
+      if (!isValidInput(user)) {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
@@ -266,7 +275,7 @@ export default {
     },
     addToMyRecipes: async (_:any, {id}:{id:number}, ctx:{user: User}) => {
       const {user} = ctx;
-      if (user === undefined) {
+      if (!isValidInput(user)) {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
@@ -286,7 +295,7 @@ export default {
     },
     removeFromMyRecipes: async (_:any, {id}:{id:number}, ctx:{user:User}) => {
       const {user} = ctx;
-      if (user === undefined) {
+      if (!isValidInput(user)) {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);

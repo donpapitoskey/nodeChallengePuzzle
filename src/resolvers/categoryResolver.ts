@@ -1,12 +1,16 @@
 import {Category, User} from '../entity';
 import {getRepository} from 'typeorm';
 
+const isValidInput = (input:any):boolean => (
+  input !== undefined && input !== null
+);
+
 export default {
   Query: {
     getCategories: async (_:any, __:any, ctx:{user:User}) => {
       const {user} = ctx;
       const CategoryRepository = getRepository(Category);
-      if (user === undefined) {
+      if (!isValidInput(user)) {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
@@ -21,7 +25,7 @@ export default {
     getOneCategory: async (_:any, {id}:{id:number}, ctx:{user:User}) => {
       const {user} = ctx;
       const CategoryRepository = getRepository(Category);
-      if (user === undefined) {
+      if (!isValidInput(user)) {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
@@ -44,7 +48,7 @@ export default {
         throw new Error('The name is mandatory');
       }
       const CategoryRepository = getRepository(Category);
-      if (ctx.user === undefined) {
+      if (!isValidInput(ctx.user)) {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
@@ -54,7 +58,7 @@ export default {
         throw new Error('The user does not exist');
       }
       const categoryExists = await CategoryRepository.findOne({name});
-      if (categoryExists) {
+      if (categoryExists !== undefined) {
         throw new Error('This category exists already');
       }
       const result = await CategoryRepository.save(input);
@@ -69,7 +73,7 @@ export default {
         throw new Error('The name is mandatory');
       }
       const {user} = ctx;
-      if (user === undefined) {
+      if (!isValidInput(user)) {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
@@ -90,7 +94,7 @@ export default {
     deleteCategory: async (_:any, {id}:{id:string}, ctx:{user:User}) => {
       const {user} = ctx;
       const CategoryRepository = getRepository(Category);
-      if (user === undefined) {
+      if (!isValidInput(user)) {
         throw new Error('Error with authentication. Please login again');
       }
       const UserRepository = getRepository(User);
@@ -100,7 +104,7 @@ export default {
         throw new Error('The user does not exist');
       }
       const {affected} = await CategoryRepository.delete(id);
-      if (!affected) {
+      if (affected === null || affected == undefined) {
         throw new Error('The category does not exist');
       }
       return 'Deletion completed';
