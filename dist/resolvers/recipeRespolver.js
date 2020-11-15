@@ -229,6 +229,9 @@ exports.default = {
                         case 0:
                             user = ctx.user;
                             name = input.name, category = input.category, description = input.description, ingredients = input.ingredients;
+                            if (name === '' || description === '' || ingredients[0] === '') {
+                                throw new Error('name, description, and ingredients are mandatory');
+                            }
                             RecipeRepository = typeorm_1.getRepository(entity_1.Recipe);
                             CategoryRepository = typeorm_1.getRepository(entity_1.Category);
                             if (user === undefined) {
@@ -248,7 +251,7 @@ exports.default = {
                                 throw new Error('This Recipe exists already');
                             }
                             return [4 /*yield*/, CategoryRepository
-                                    .findOne({ name: category })];
+                                    .findOne({ id: category })];
                         case 3:
                             categoryExists = _b.sent();
                             if (!categoryExists) {
@@ -288,7 +291,7 @@ exports.default = {
                             }
                             CategoryRepository = typeorm_1.getRepository(entity_1.Category);
                             return [4 /*yield*/, CategoryRepository
-                                    .findOne({ name: category })];
+                                    .findOne({ id: category })];
                         case 2:
                             categoryExists = _b.sent();
                             if (categoryExists === undefined) {

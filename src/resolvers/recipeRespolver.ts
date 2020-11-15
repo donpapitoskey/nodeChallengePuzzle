@@ -12,7 +12,7 @@ interface RecipeInput {
   name: string;
   description: string;
   ingredients: string;
-  category: string;
+  category: number;
 }
 
 const ingredientsSearchCriteria = (input:string[]):string => {
@@ -45,7 +45,7 @@ export default {
       }
       const {name, ingredients, category} = filtering;
 
-      if (category === undefined) {
+      if (category === undefined || category === null) {
         if (ingredients === undefined) {
           if (name === undefined) {
             const results = new Recipe();
@@ -129,7 +129,7 @@ export default {
           .getMany();
       return results;
     },
-    getOneRecipe: async (_:any, {id}:{id:string}, ctx:{user:User}) => {
+    getOneRecipe: async (_:any, {id}:{id:number}, ctx:{user:User}) => {
       const {user} = ctx;
       if (user === undefined) {
         throw new Error('Error with authentication. Please login again');
@@ -165,6 +165,10 @@ export default {
     ) => {
       const {user} = ctx;
       const {name, category, description, ingredients} = input;
+      if (name === '' || description === '' || ingredients[0] === '') {
+        throw new
+        Error('name, description, and ingredients are mandatory');
+      }
       const RecipeRepository = getRepository(Recipe);
       const CategoryRepository = getRepository(Category);
       if (user === undefined) {
@@ -182,8 +186,7 @@ export default {
         throw new Error('This Recipe exists already');
       }
       const categoryExists = await CategoryRepository
-          .findOne({name: category});
-
+          .findOne({id: category});
       if (!categoryExists) {
         throw new Error('Invalid Category');
       }
@@ -201,6 +204,10 @@ export default {
     ) => {
       const {user} = ctx;
       const {category, description, ingredients, name} = input;
+      if (name === '' || description === '' || ingredients[0] === '') {
+        throw new
+        Error('Name, description, and ingredients are mandatory');
+      }
       if (user === undefined) {
         throw new Error('Error with authentication. Please login again');
       }
@@ -211,7 +218,7 @@ export default {
       }
       const CategoryRepository = getRepository(Category);
       const categoryExists = await CategoryRepository
-          .findOne({name: category});
+          .findOne({id: category});
       if (categoryExists === undefined) {
         throw new Error('Invalid Category');
       }

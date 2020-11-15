@@ -52,7 +52,7 @@ const schemas = gql`
     name: String!
     ingredients: [String!]
     description: String!
-    category: String!
+    category: ID!
   }
 
   input RecipeInputFiltering {
